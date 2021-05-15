@@ -11,10 +11,7 @@ var requestHandler = function (request, response) {
   if (queryIndex !== -1) {
     request.url = request.url.slice(0, queryIndex);
   }
-
   var url = request.url;
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
-
   var statusCode = 404;
   var method = request.method;
   var headers = defaultCorsHeaders;
@@ -32,10 +29,8 @@ var requestHandler = function (request, response) {
       request.on('data', (chunk) => {
         var message = JSON.parse((chunk.toString()));
         content.results.push(message);
-        console.log('zappy', content.results);
       });
       request.on('end', () => {
-        console.log('zippy', content.results);
         statusCode = 201;
         response.writeHead(201, headers);
         response.end(JSON.stringify(content.results));
