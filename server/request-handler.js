@@ -6,13 +6,25 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 var requestHandler = function (request, response) {
-  var statusCode = 404;
+
+  let queryIndex = request.url.indexOf('?');
+  if (queryIndex !== -1) {
+    request.url = request.url.slice(0, queryIndex);
+  }
+
   var url = request.url;
+  console.log('Serving request type ' + request.method + ' for url ' + request.url);
+
+  var statusCode = 404;
   var method = request.method;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = 'application/json';
-  if (url === '/classes/messages') {
-    if (method === 'GET') {
+  if (url === '/classes/messages' || url === '/') {
+    if (method === 'OPTIONS') {
+      statusCode = 200;
+      response.writeHead(statusCode, headers);
+      response.end();
+    } else if (method === 'GET') {
       statusCode = 200;
       response.writeHead(statusCode, headers);
       response.end(JSON.stringify(content));
